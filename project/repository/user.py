@@ -10,7 +10,7 @@ router = APIRouter(
     tags=['Users']
 )
 
-@router.post('/')
+@router.post('/new')
 def create_user(request:schema.User, db:Session = Depends(database.get_db)):
     hashed_pass = hashing.get_password_hash(request.password)
     new_user = models.User(name = request.name,username = request.username, password = hashed_pass)
@@ -19,12 +19,12 @@ def create_user(request:schema.User, db:Session = Depends(database.get_db)):
     db.refresh(new_user)
     return request
 
-@router.get('/', response_model= List[schema.showUser])
+@router.get('/find', response_model= List[schema.showUser])
 def show_user_all(db:Session=Depends(database.get_db)):
     all_users = db.query(models.User).all()
     return all_users
 
-@router.get('/{id}',response_model= schema.showUser)
+@router.get('/find/{id}',response_model= schema.showUser)
 def show_user_id(id:int, db:Session = Depends(database.get_db)):
     selected_project = db.query(models.User).filter(models.User.id == id).first()
 

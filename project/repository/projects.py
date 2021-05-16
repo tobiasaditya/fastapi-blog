@@ -1,3 +1,4 @@
+from project.token import get_current_user
 from fastapi import APIRouter
 from fastapi.params import Depends
 from fastapi import HTTPException, status
@@ -10,7 +11,7 @@ router = APIRouter(
 )
 
 @router.post('/new')
-def create_project(request:schema.Project, db:Session = Depends(database.get_db)):
+def create_project(request:schema.Project, db:Session = Depends(database.get_db), current_user : schema.User = Depends(get_current_user)):
     new_project = models.Project(title = request.title, due_date = request.due_date)
     db.add(new_project)
     db.commit()
